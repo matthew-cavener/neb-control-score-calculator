@@ -37,14 +37,39 @@ jobs:
         with:
           name: web
           path: build/web
-      # Installing rsync is needed in order to deploy to GitHub Pages. Without it, the build will fail.
-      - name: Install rsync 📚
-        run: |
-          apt-get update && apt-get install -y rsync
-      - name: Deploy to GitHub Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: main # The branch the action should deploy to.
-          FOLDER: build/web # The folder the action should deploy.
+    #   # Installing rsync is needed in order to deploy to GitHub Pages. Without it, the build will fail.
+    #   - name: Install rsync 📚
+    #     run: |
+    #       apt-get update && apt-get install -y rsync
+    #   - name: Deploy to GitHub Pages 🚀
+    #     uses: JamesIves/github-pages-deploy-action@releases/v3
+    #     with:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #       BRANCH: main # The branch the action should deploy to.
+    #       FOLDER: build/web # The folder the action should deploy.
 
+  deploy-itch:
+    name: deploy to itch.io
+    needs: [export-web]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        channel: ["web"]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.channel }}
+          path: archives/${{ matrix.channel }}
+
+      - name: Deploy to Itch.io [${{ matrix.channel }}]
+        uses: manleydev/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: ${{ matrix.channel }}
+          ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
+          ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
+          PACKAGE: ${{ github.workspace }}/archives/${{ matrix.channel }}
