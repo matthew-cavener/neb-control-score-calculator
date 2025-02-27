@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://kxq5qoceby11"]
+
+[ext_resource type="PackedScene" uid="uid://df5g5d4v2q0i4" path="res://scenes/control_point.tscn" id="1_mhmbw"]
+
+[node name="ControlPointBar" type="Node2D"]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -188.0
+offset_right = 188.0
+offset_bottom = 24.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="ControlPointA" parent="HBoxContainer" instance=ExtResource("1_mhmbw")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ControlPointB" parent="HBoxContainer" instance=ExtResource("1_mhmbw")]
+layout_mode = 2
+point_name = "B"
+
+[node name="ControlPointC" parent="HBoxContainer" instance=ExtResource("1_mhmbw")]
+layout_mode = 2
+point_name = "C"
+
+[node name="ControlPointD" parent="HBoxContainer" instance=ExtResource("1_mhmbw")]
+layout_mode = 2
+point_name = "D"
+
+[node name="ControlPointE" parent="HBoxContainer" instance=ExtResource("1_mhmbw")]
+layout_mode = 2
+point_name = "E"

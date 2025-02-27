@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bfythqo62m2io"]
+
+[node name="VictoryConditionsLabel" type="RichTextLabel"]
+offset_right = 384.0
+offset_bottom = 128.0
+bbcode_enabled = true
+text = "The game is a forgone conclusion"
