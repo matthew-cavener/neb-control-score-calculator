@@ -24,7 +24,6 @@ func _on_score_timer_timeout() -> void:
 func calculate_score() -> void:
     print("score_timer timeout, calculating score")
     var score_limit = float($ScoreLimit.text)
-    var control_points = get_tree().get_nodes_in_group("control_point")
     var red_caps = get_tree().get_nodes_in_group("red_point")
     var blue_caps = get_tree().get_nodes_in_group("blue_point")
     var red_score = float($RedTeamScore.text)
