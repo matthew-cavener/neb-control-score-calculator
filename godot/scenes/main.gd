@@ -42,10 +42,10 @@ func calculate_score() -> void:
     var points_to_blue_victory = score_limit - blue_score
     var time_to_red_victory = (points_to_red_victory * SCORE_TIMER_INTERVAL) / (red_caps.size() * SCORE_PER_CAP_POINT)
     var time_to_blue_victory = (points_to_blue_victory * SCORE_TIMER_INTERVAL) / (blue_caps.size() * SCORE_PER_CAP_POINT)
-    var red_team_victory_conditions = "Red team needs " + str(points_to_red_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_red_victory)) + " minutes"
+    var red_team_victory_conditions = "Red team needs " + str(points_to_red_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_red_victory))
     if red_caps.size() == 0:
         red_team_victory_conditions = "Red team needs to disarm all blue ships to win"
-    var blue_team_victory_conditions = "Blue team needs " + str(points_to_blue_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_blue_victory)) + " minutes"
+    var blue_team_victory_conditions = "Blue team needs " + str(points_to_blue_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_blue_victory))
     if blue_caps.size() == 0:
         blue_team_victory_conditions = "Blue team needs to disarm all red ships to win"
     $VictoryConditionsLabel.text = blue_team_victory_conditions + "\n" + red_team_victory_conditions
