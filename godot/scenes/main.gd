@@ -41,13 +41,41 @@ func calculate_score() -> void:
     var points_to_blue_victory = score_limit - blue_score
     var time_to_red_victory = (points_to_red_victory * SCORE_TIMER_INTERVAL) / (red_caps.size() * SCORE_PER_CAP_POINT)
     var time_to_blue_victory = (points_to_blue_victory * SCORE_TIMER_INTERVAL) / (blue_caps.size() * SCORE_PER_CAP_POINT)
+
+    var red_times_to_win = {}
+    var blue_times_to_win = {}
+
+    for number_of_caps in range(1, 6):
+        var red_time_to_win = (points_to_red_victory * SCORE_TIMER_INTERVAL) / (number_of_caps * SCORE_PER_CAP_POINT)
+        var blue_time_to_win = (points_to_blue_victory * SCORE_TIMER_INTERVAL) / (number_of_caps * SCORE_PER_CAP_POINT)
+        red_times_to_win[number_of_caps] = (red_time_to_win)
+        blue_times_to_win[number_of_caps] = (blue_time_to_win)
+
+    var projected_loser = ""
+
+    if time_to_red_victory > time_to_blue_victory:
+        projected_loser = "Red"
+    else:
+        projected_loser = "Blue"
+
+    var red_caps_needed = "game should be over"
+    var blue_caps_needed = "game should be over"
+
+    for key in red_times_to_win.keys():
+        if blue_times_to_win.has(5 - key) and red_times_to_win[key] < blue_times_to_win[5 - key]:
+            red_caps_needed = key
+            break
+    for key in blue_times_to_win.keys():
+        if red_times_to_win.has(5 - key) and blue_times_to_win[key] < red_times_to_win[5 - key]:
+            blue_caps_needed = key
+            break
+
     var red_team_victory_conditions = "Red team needs " + str(points_to_red_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_red_victory))
-    if red_caps.size() == 0:
-        red_team_victory_conditions = "Red team needs to disarm all blue ships to win"
     var blue_team_victory_conditions = "Blue team needs " + str(points_to_blue_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_blue_victory))
-    if blue_caps.size() == 0:
-        blue_team_victory_conditions = "Blue team needs to disarm all red ships to win"
-    $VictoryConditionsLabel.text = blue_team_victory_conditions + "\n" + red_team_victory_conditions
+
+    red_team_victory_conditions += "\nRed team needs " + str(red_caps_needed) + " caps to win.\n"
+    blue_team_victory_conditions += "\nBlue team needs " + str(blue_caps_needed) + " caps to win.\n"
+    $VictoryConditionsLabel.text = red_team_victory_conditions  + "\n" +  blue_team_victory_conditions + "\n" + projected_loser + " needs to make something happen."
 
 func convert_seconds_to_minutes_seconds(seconds: int) -> String:
     var minutes = seconds / 60

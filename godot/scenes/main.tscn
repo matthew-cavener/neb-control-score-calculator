@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://b0oikmo6jwhk5"]
+[gd_scene load_steps=6 format=3 uid="uid://b0oikmo6jwhk5"]
 
 [ext_resource type="PackedScene" uid="uid://kxq5qoceby11" path="res://scenes/control_point_bar.tscn" id="1_mxuch"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_rdj1o"]
 [ext_resource type="PackedScene" uid="uid://cu235283v7n2w" path="res://scenes/progress_bar.tscn" id="2_812s5"]
-[ext_resource type="PackedScene" uid="uid://bfythqo62m2io" path="res://scenes/victory_conditions_label.tscn" id="3_ty0mb"]
 [ext_resource type="Texture2D" uid="uid://bohay0jyb647v" path="res://assets/kenney_ui-pack-space-expansion/button_square_depth.svg" id="5_n5yif"]
 [ext_resource type="Texture2D" uid="uid://dv8xbwp2jtnwd" path="res://assets/kenney_ui-pack-space-expansion/panel_square_screws.svg" id="6_ijc56"]
 
@@ -36,13 +35,6 @@ color = 1
 [node name="ProgressBarRed" parent="." instance=ExtResource("2_812s5")]
 position = Vector2(1024, 32)
 
-[node name="VictoryConditionsLabel" parent="." instance=ExtResource("3_ty0mb")]
-offset_left = 640.0
-offset_top = 256.0
-offset_right = 1280.0
-offset_bottom = 1016.0
-text = "asdf"
-
 [node name="MadeByLabel" type="Label" parent="."]
 offset_left = 1664.0
 offset_top = 960.0
@@ -53,6 +45,16 @@ Neb Score Calculator
 Thanks to localmathblob"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="VictoryConditionsLabel" type="Label" parent="."]
+offset_left = 704.0
+offset_top = 256.0
+offset_right = 1216.0
+offset_bottom = 696.0
+text = "Welcome to neb score calc!
+
+See the description or readme for usage instructions"
+horizontal_alignment = 1
 
 [node name="BlueTeamScore" type="LineEdit" parent="."]
 offset_left = 128.0
