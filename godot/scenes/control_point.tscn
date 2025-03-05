@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://df5g5d4v2q0i4"]
 
-[ext_resource type="Script" path="res://scenes/control_point.gd" id="1_0i275"]
+[ext_resource type="Script" uid="uid://cmmoggim8k2yt" path="res://scenes/control_point.gd" id="1_0i275"]
 
 [sub_resource type="Gradient" id="Gradient_6jdp0"]
 interpolation_mode = 2
