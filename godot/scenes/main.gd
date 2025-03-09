@@ -93,21 +93,25 @@ func calculate_score() -> void:
     for key in blue_times_to_win.keys():
         blue_times_to_win[key] = convert_seconds_to_minutes_seconds(int(blue_times_to_win[key]))
 
-    # var red_team_extras = "Red team caps:time to win: " + str(red_times_to_win)
-    # var blue_team_extras = "Blue team caps:time to win: " + str(blue_times_to_win)
-
     var red_team_victory_conditions = "Red team needs " + str(points_to_red_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_red_victory))
     var blue_team_victory_conditions = "Blue team needs " + str(points_to_blue_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_blue_victory))
 
     red_team_victory_conditions += "\nRed team needs " + str(red_caps_needed) + " caps to win.\n"
     blue_team_victory_conditions += "\nBlue team needs " + str(blue_caps_needed) + " caps to win.\n"
+
+    var red_times_to_win_formatted = format_times_to_win(red_times_to_win)
+    var blue_times_to_win_formatted = format_times_to_win(blue_times_to_win)
+
     $VictoryConditionsLabel.text = (
         red_team_victory_conditions +
         "\n" +
         blue_team_victory_conditions +
         "\n" +
-        projected_loser + " needs to make something happen. **EXPERIMENTAL!!!** They will need " + str(loser_caps_needed + 1) + " caps to win in " + approx_time_to_extra_cap_needed
+        projected_loser + " needs to make something happen. **EXPERIMENTAL!!!** They will need " + str(loser_caps_needed + 1) + " caps to win in " + approx_time_to_extra_cap_needed +
+        "\n\nRed Times to Win:\n" + red_times_to_win_formatted +
+        "\nBlue Times to Win:\n" + blue_times_to_win_formatted
     )
+
 
 func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
     return (points_to_victory * SCORE_TIMER_INTERVAL) / (caps * SCORE_PER_CAP_POINT)
@@ -150,3 +154,10 @@ func _on_timer_reset_button_pressed() -> void:
 
 func _on_manual_score_tick_button_pressed() -> void:
     calculate_score()
+
+
+func format_times_to_win(times_to_win: Dictionary) -> String:
+    var formatted_string = ""
+    for key in times_to_win.keys():
+        formatted_string += "Caps: " + str(key) + " - Time: " + str(times_to_win[key]) + "\n"
+    return formatted_string
