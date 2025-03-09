@@ -108,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        channel: ["web", "windows", "linux"]
+        channel: ["web", "windows"]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
