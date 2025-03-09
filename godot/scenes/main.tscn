@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://b0oikmo6jwhk5"]
 
 [ext_resource type="PackedScene" uid="uid://kxq5qoceby11" path="res://scenes/control_point_bar.tscn" id="1_mxuch"]
-[ext_resource type="Script" path="res://scenes/main.gd" id="1_rdj1o"]
+[ext_resource type="Script" uid="uid://cu045jqh1suqn" path="res://scenes/main.gd" id="1_rdj1o"]
 [ext_resource type="PackedScene" uid="uid://cu235283v7n2w" path="res://scenes/progress_bar.tscn" id="2_812s5"]
 [ext_resource type="Texture2D" uid="uid://bohay0jyb647v" path="res://assets/kenney_ui-pack-space-expansion/button_square_depth.svg" id="5_n5yif"]
 [ext_resource type="Texture2D" uid="uid://dv8xbwp2jtnwd" path="res://assets/kenney_ui-pack-space-expansion/panel_square_screws.svg" id="6_ijc56"]
@@ -74,7 +74,7 @@ text = "1000"
 alignment = 1
 flat = true
 
-[node name="TimerResetButton" type="TextureButton" parent="."]
+[node name="SyncTimerTickScoreButton" type="TextureButton" parent="."]
 offset_left = 192.0
 offset_top = 128.0
 offset_right = 256.0
@@ -82,20 +82,51 @@ offset_bottom = 192.0
 texture_normal = ExtResource("5_n5yif")
 texture_pressed = ExtResource("6_ijc56")
 
-[node name="TimerResetLabel" type="Label" parent="."]
+[node name="ManualScoreTickButton" type="TextureButton" parent="."]
+offset_left = 192.0
+offset_top = 320.0
+offset_right = 256.0
+offset_bottom = 384.0
+texture_normal = ExtResource("5_n5yif")
+texture_pressed = ExtResource("6_ijc56")
+
+[node name="TimerResetButton" type="TextureButton" parent="."]
+offset_left = 192.0
+offset_top = 448.0
+offset_right = 256.0
+offset_bottom = 512.0
+texture_normal = ExtResource("5_n5yif")
+texture_pressed = ExtResource("6_ijc56")
+
+[node name="TimerResetTickScoreLabel" type="Label" parent="."]
 offset_left = 64.0
 offset_top = 192.0
 offset_right = 257.0
 offset_bottom = 215.0
-text = "Press to sync score timer ^
+text = "Press to sync score timer and tick score
+
 Score limit:"
 
+[node name="SeperateTimerResetTickScoreLabel" type="Label" parent="."]
+offset_left = 256.0
+offset_top = 320.0
+offset_right = 403.0
+offset_bottom = 395.0
+text = "Press to tick score
+
+
+
+
+Press to sync timer"
+
 [node name="ScoreLimit" type="LineEdit" parent="."]
-offset_left = 160.0
-offset_top = 216.0
-offset_right = 288.0
-offset_bottom = 247.0
+offset_left = 153.0
+offset_top = 242.0
+offset_right = 281.0
+offset_bottom = 273.0
 text = "1000"
 placeholder_text = "Point Limit"
 
+[connection signal="pressed" from="SyncTimerTickScoreButton" to="." method="_on_sync_timer_tick_score_button_pressed"]
+[connection signal="pressed" from="ManualScoreTickButton" to="." method="_on_manual_score_tick_button_pressed"]
 [connection signal="pressed" from="TimerResetButton" to="." method="_on_timer_reset_button_pressed"]

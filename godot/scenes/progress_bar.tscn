@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cu235283v7n2w"]
 
-[ext_resource type="Script" path="res://scenes/progress_bar.gd" id="1_tdb1i"]
+[ext_resource type="Script" uid="uid://ds7ffpum06foy" path="res://scenes/progress_bar.gd" id="1_tdb1i"]
 [ext_resource type="Texture2D" uid="uid://h6312v3bo8m6" path="res://assets/kenney_ui-pack-space-expansion/Vector/Grey/bar_square_large_m.svg" id="2_ojb0v"]
 [ext_resource type="Texture2D" uid="uid://cxwe1lc6r8le8" path="res://assets/kenney_ui-pack-space-expansion/Vector/Red/bar_square_large_m.svg" id="3_8njky"]
 

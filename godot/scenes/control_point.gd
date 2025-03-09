@@ -9,6 +9,8 @@ var red_rgb = Color(242.0/255.0, 100.0/255.0, 45.0/255.0, 1.0)
 var blue_rgb = Color(66.0/255.0, 93.0/255.0, 129.0/255.0, 1.0)
 
 func _ready() -> void:
+    modulate = Color.GRAY
+    add_to_group("neutral_point")
     $ControlPointLabel.text = point_name
 
 func _on_control_point_pressed() -> void:
@@ -27,3 +29,4 @@ func _on_control_point_pressed() -> void:
             controlled_by = ControlledByTeam.NONE
             self.modulate = Color.GRAY
             remove_from_group("blue_point")
+            add_to_group("neutral_point")
