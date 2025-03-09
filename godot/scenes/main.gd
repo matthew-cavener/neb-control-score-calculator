@@ -106,7 +106,7 @@ func calculate_score() -> void:
         "\n" +
         blue_team_victory_conditions +
         "\n" +
-        projected_loser + " needs to make something happen. They will need " + str(loser_caps_needed + 1) + " caps to win in " + approx_time_to_extra_cap_needed
+        projected_loser + " needs to make something happen. **EXPERIMENTAL!!!** They will need " + str(loser_caps_needed + 1) + " caps to win in " + approx_time_to_extra_cap_needed
     )
 
 func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
