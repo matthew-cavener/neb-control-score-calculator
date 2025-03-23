@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://h6312v3bo8m6"
-path="res://.godot/imported/bar_square_large_m.svg-e12112f5ae68a8da0d64f26a8840255d.ctex"
+uid="uid://c6wpgf3cobxg2"
+path="res://.godot/imported/bar_square_large_square.svg-3e5cab89e2604d3fd724ecd6a73796bd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/kenney_ui-pack-space-expansion/Vector/Grey/bar_square_large_m.svg"
-dest_files=["res://.godot/imported/bar_square_large_m.svg-e12112f5ae68a8da0d64f26a8840255d.ctex"]
+source_file="res://assets/kenney_ui-pack-space-expansion/Vector/Grey/bar_square_large_square.svg"
+dest_files=["res://.godot/imported/bar_square_large_square.svg-3e5cab89e2604d3fd724ecd6a73796bd.ctex"]
 
 [params]
 

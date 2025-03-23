@@ -1,12 +1,6 @@
 extends Node2D
 
 
-const SCORE_TIMER_INTERVAL = 10.0
-const SCORE_PER_CAP_POINT = 2
-const CAPTURE_POINTS = 5
-
-
-var score_timer: Timer
 var projected_loser: String = ""
 var loser_caps_needed: int = 0
 var time_to_red_victory: float = 999999
@@ -27,12 +21,7 @@ var approx_time_to_extra_cap_needed: String = ""
 func _ready() -> void:
     $BlueTeamScore.text = str(0)
     $RedTeamScore.text = str(0)
-    score_timer = Timer.new()
-    score_timer.wait_time = SCORE_TIMER_INTERVAL
-    score_timer.one_shot = false
-    score_timer.timeout.connect(_on_score_timer_timeout)
-    add_child(score_timer)
-    score_timer.start()
+    Events.connect("score_timer_timeout", _on_score_timer_timeout)
 
 
 func calculate_score() -> void:
@@ -42,8 +31,8 @@ func calculate_score() -> void:
     var neutral_caps = get_tree().get_nodes_in_group("neutral_point")
     var red_score = int($RedTeamScore.text)
     var blue_score = int($BlueTeamScore.text)
-    red_score += SCORE_PER_CAP_POINT * red_caps.size()
-    blue_score += SCORE_PER_CAP_POINT * blue_caps.size()
+    red_score += Constants.SCORE_PER_CAP_POINT * red_caps.size()
+    blue_score += Constants.SCORE_PER_CAP_POINT * blue_caps.size()
 
     $RedTeamScore.text = str(red_score)
     $ProgressBarRed.texture_bar_fill_fraction = red_score / score_limit
@@ -54,7 +43,7 @@ func calculate_score() -> void:
     points_to_red_victory = score_limit - red_score
     points_to_blue_victory = score_limit - blue_score
 
-    for number_of_caps in range(1, CAPTURE_POINTS + 1):
+    for number_of_caps in range(1, Constants.CAPTURE_POINTS + 1):
         red_time_to_win = calculate_time_to_win(points_to_red_victory, number_of_caps)
         blue_time_to_win = calculate_time_to_win(points_to_blue_victory, number_of_caps)
         red_times_to_win[number_of_caps] = (red_time_to_win)
@@ -78,11 +67,11 @@ func calculate_score() -> void:
         loser_caps_needed = blue_caps_needed
 
     for key in red_times_to_win.keys():
-        if blue_times_to_win.has(CAPTURE_POINTS - key) and red_times_to_win[key] < blue_times_to_win[CAPTURE_POINTS - key]:
+        if blue_times_to_win.has(Constants.CAPTURE_POINTS - key) and red_times_to_win[key] < blue_times_to_win[Constants.CAPTURE_POINTS - key]:
             red_caps_needed = key
             break
     for key in blue_times_to_win.keys():
-        if red_times_to_win.has(CAPTURE_POINTS - key) and blue_times_to_win[key] < red_times_to_win[CAPTURE_POINTS - key]:
+        if red_times_to_win.has(Constants.CAPTURE_POINTS - key) and blue_times_to_win[key] < red_times_to_win[Constants.CAPTURE_POINTS - key]:
             blue_caps_needed = key
             break
 
@@ -114,8 +103,13 @@ func calculate_score() -> void:
 
 
 func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
-    return (points_to_victory * SCORE_TIMER_INTERVAL) / (caps * SCORE_PER_CAP_POINT)
+    return (points_to_victory * Constants.SCORE_TIMER_INTERVAL) / (caps * Constants.SCORE_PER_CAP_POINT)
 
+# https://discord.com/channels/1091469366371029025/1091469367323152386/1353191485893246976
+# anyways can't you just solve 3(1000-x-x't)=2(1000-y-y't) for t, where x is the current points of the losing team, x' is the rate of points increase for the losing team, y/y' are the same for the winning team, and t represents time?
+# 1000-x-x't calculates the remaining score that team x needs to win at time t, and you need a 4:1 lead to win once the ratio of your remaining score to the enemy's remaining score becomes greater than 3:2
+# you also have to offset t by a minute since capturing an objective is not instantaneous, but im sure you can figure that part out
+# -- Lobster
 
 func calculate_time_before_extra_cap_needed(
     projected_loser: String,
@@ -127,9 +121,9 @@ func calculate_time_before_extra_cap_needed(
     blue_caps_size: int
     ) -> float:
     if projected_loser == "Red":
-        return (blue_times_to_win[CAPTURE_POINTS - red_caps_needed] - red_times_to_win[red_caps_needed]) / ((SCORE_PER_CAP_POINT * 0.8) / red_caps_size)
+        return (blue_times_to_win[Constants.CAPTURE_POINTS - red_caps_needed] - red_times_to_win[red_caps_needed]) / ((Constants.SCORE_PER_CAP_POINT * 0.8) / red_caps_size)
     else:
-        return (red_times_to_win[CAPTURE_POINTS - blue_caps_needed] - blue_times_to_win[blue_caps_needed]) / ((SCORE_PER_CAP_POINT * 0.8) / blue_caps_size)
+        return (red_times_to_win[Constants.CAPTURE_POINTS - blue_caps_needed] - blue_times_to_win[blue_caps_needed]) / ((Constants.SCORE_PER_CAP_POINT * 0.8) / blue_caps_size)
 
 
 func convert_seconds_to_minutes_seconds(seconds: int) -> String:
@@ -138,26 +132,24 @@ func convert_seconds_to_minutes_seconds(seconds: int) -> String:
     return str(minutes).pad_zeros(2) + ":" + str(remaining_seconds).pad_zeros(2)
 
 
+func format_times_to_win(times_to_win: Dictionary) -> String:
+    var formatted_string = ""
+    for key in times_to_win.keys():
+        formatted_string += "Caps: " + str(key) + " - Time: " + str(times_to_win[key]) + "\n"
+    return formatted_string
+
+
 func _on_score_timer_timeout() -> void:
-    print("score_timer timeout, calculating score")
     calculate_score()
 
 
 func _on_sync_timer_tick_score_button_pressed() -> void:
-    calculate_score()
-    score_timer.start()
-
-
-func _on_timer_reset_button_pressed() -> void:
-    score_timer.start()
+    Events.emit_signal("sync_timer_tick_score_button_pressed")
 
 
 func _on_manual_score_tick_button_pressed() -> void:
     calculate_score()
 
 
-func format_times_to_win(times_to_win: Dictionary) -> String:
-    var formatted_string = ""
-    for key in times_to_win.keys():
-        formatted_string += "Caps: " + str(key) + " - Time: " + str(times_to_win[key]) + "\n"
-    return formatted_string
+func _on_timer_reset_button_pressed() -> void:
+    Events.emit_signal("timer_reset_button_pressed")

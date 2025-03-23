@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cu235283v7n2w"]
+[gd_scene load_steps=3 format=3 uid="uid://cu235283v7n2w"]
 
 [ext_resource type="Script" uid="uid://ds7ffpum06foy" path="res://scenes/progress_bar.gd" id="1_tdb1i"]
-[ext_resource type="Texture2D" uid="uid://h6312v3bo8m6" path="res://assets/kenney_ui-pack-space-expansion/Vector/Grey/bar_square_large_m.svg" id="2_ojb0v"]
-[ext_resource type="Texture2D" uid="uid://cxwe1lc6r8le8" path="res://assets/kenney_ui-pack-space-expansion/Vector/Red/bar_square_large_m.svg" id="3_8njky"]
+[ext_resource type="Texture2D" uid="uid://c6wpgf3cobxg2" path="res://assets/kenney_ui-pack-space-expansion/Vector/Grey/bar_square_large_square.svg" id="2_8un81"]
 
 [node name="ProgressBar" type="Node2D"]
 script = ExtResource("1_tdb1i")
@@ -14,11 +13,13 @@ anchor_bottom = 0.5
 offset_right = 640.0
 offset_bottom = 64.0
 grow_vertical = 2
+step = 0.0
 value = 38.0
 nine_patch_stretch = true
-stretch_margin_left = 12
-stretch_margin_top = 6
-stretch_margin_right = 12
-stretch_margin_bottom = 6
-texture_under = ExtResource("2_ojb0v")
-texture_progress = ExtResource("3_8njky")
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+texture_under = ExtResource("2_8un81")
+texture_progress = ExtResource("2_8un81")
+tint_progress = Color(0.94902, 0.392157, 0.176471, 1)
