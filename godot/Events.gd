@@ -1,3 +1,8 @@
 extends Node
 
-signal _on_control_point_pressed(control_point: TextureButton)
+
+signal sync_timer_tick_score_button_pressed
+signal manual_score_tick_button_pressed
+signal timer_reset_button_pressed
+signal control_point_pressed(control_point: TextureButton)
+signal score_timer_timeout

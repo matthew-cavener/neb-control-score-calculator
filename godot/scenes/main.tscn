@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://b0oikmo6jwhk5"]
+[gd_scene load_steps=7 format=3 uid="uid://b0oikmo6jwhk5"]
 
 [ext_resource type="PackedScene" uid="uid://kxq5qoceby11" path="res://scenes/control_point_bar.tscn" id="1_mxuch"]
 [ext_resource type="Script" uid="uid://cu045jqh1suqn" path="res://scenes/main.gd" id="1_rdj1o"]
 [ext_resource type="PackedScene" uid="uid://cu235283v7n2w" path="res://scenes/progress_bar.tscn" id="2_812s5"]
+[ext_resource type="PackedScene" uid="uid://ynkomokhdk67" path="res://scenes/timer_bar.tscn" id="2_tefeu"]
 [ext_resource type="Texture2D" uid="uid://bohay0jyb647v" path="res://assets/kenney_ui-pack-space-expansion/button_square_depth.svg" id="5_n5yif"]
 [ext_resource type="Texture2D" uid="uid://dv8xbwp2jtnwd" path="res://assets/kenney_ui-pack-space-expansion/panel_square_screws.svg" id="6_ijc56"]
 
@@ -13,6 +14,9 @@ script = ExtResource("1_rdj1o")
 offset_right = 1920.0
 offset_bottom = 1080.0
 color = Color(0, 0, 0, 1)
+
+[node name="TimerBar" parent="." instance=ExtResource("2_tefeu")]
+position = Vector2(384, 128)
 
 [node name="TimeRemainingLineEdit" type="LineEdit" parent="."]
 visible = false
