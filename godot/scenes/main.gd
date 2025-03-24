@@ -52,7 +52,6 @@ func calculate_score() -> void:
         loser_caps_needed = blue_caps_needed
 
     approx_time_to_extra_cap_needed = convert_seconds_to_minutes_seconds(int(calculate_time_until_extra_cap_needed(
-        projected_loser,
         red_score,
         blue_score,
         red_caps.size(),
@@ -61,8 +60,8 @@ func calculate_score() -> void:
         blue_caps_needed
     )))
 
-    var red_team_victory_conditions = "Red team needs " + str(points_to_red_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_red_victory))
-    var blue_team_victory_conditions = "Blue team needs " + str(points_to_blue_victory) + " points to win in " + convert_seconds_to_minutes_seconds(int(time_to_blue_victory))
+    var red_team_victory_conditions = "Red team needs " + str(points_to_red_victory) + " points to win.\nWith their current caps, they will win in " + convert_seconds_to_minutes_seconds(int(time_to_red_victory))
+    var blue_team_victory_conditions = "Blue team needs " + str(points_to_blue_victory) + " points to win.\nWith their current caps, they will win in " + convert_seconds_to_minutes_seconds(int(time_to_blue_victory))
 
     red_team_victory_conditions += "\nRed team needs " + str(red_caps_needed) + " caps to win.\n"
     blue_team_victory_conditions += "\nBlue team needs " + str(blue_caps_needed) + " caps to win.\n"
@@ -72,7 +71,7 @@ func calculate_score() -> void:
         "\n" +
         blue_team_victory_conditions +
         "\n" +
-        projected_loser + " needs to make something happen. **EXPERIMENTAL!!!** They will need " + str(loser_caps_needed + 1) + " caps to win in " + approx_time_to_extra_cap_needed
+        projected_loser + " team is projected to lose. **!!!EXPERIMENTAL!!!** They will need " + str(loser_caps_needed + 1) + " caps to win in " + approx_time_to_extra_cap_needed
     )
 
 
@@ -110,7 +109,6 @@ func calculate_caps_needed_to_win(red_score: int, blue_score: int) -> Dictionary
 
 
 func calculate_time_until_extra_cap_needed(
-    projected_loser: String,
     red_score: int,
     blue_score: int,
     red_caps: int,
@@ -130,17 +128,19 @@ func calculate_time_until_extra_cap_needed(
     var total_capture_points = Constants.CAPTURE_POINTS
     var red_points_rate = Constants.SCORE_PER_CAP_POINT * red_caps / Constants.SCORE_TIMER_INTERVAL
     var blue_points_rate = Constants.SCORE_PER_CAP_POINT * blue_caps / Constants.SCORE_TIMER_INTERVAL
+    var numerator = 0
+    var denominator = 0
     if projected_loser == "Red":
-        var numerator = (1000 - (current_red_caps_needed + 1) * red_score + (total_capture_points - (current_red_caps_needed + 1)) * blue_score)
-        var denominator = (current_red_caps_needed + 1) * red_points_rate - (total_capture_points - (current_red_caps_needed + 1)) * blue_points_rate
-        print("numerator: ", numerator, " denominator: ", denominator)
-        print("result: ", numerator / denominator if denominator != 0 else 420)
-        print("red_points_rate: ", red_points_rate, " blue_points_rate: ", blue_points_rate)
-        return numerator / denominator if denominator != 0 else 0
+        numerator = (1000 - (current_red_caps_needed + 1) * red_score + (total_capture_points - (current_red_caps_needed + 1)) * blue_score)
+        denominator = ((current_red_caps_needed + 1) * red_points_rate) - ((total_capture_points - (current_red_caps_needed + 1)) * blue_points_rate)
     else:
-        var numerator = (1000 - (current_blue_caps_needed + 1) * blue_score + (total_capture_points - current_blue_caps_needed + 1) * red_score)
-        var denominator = (current_blue_caps_needed + 1) * blue_points_rate - (total_capture_points - current_blue_caps_needed + 1) * red_points_rate
-        return numerator / denominator
+        numerator = (1000 - (current_blue_caps_needed + 1) * blue_score + (total_capture_points - (current_blue_caps_needed + 1)) * red_score)
+        denominator = ((current_blue_caps_needed + 1) * blue_points_rate) - ((total_capture_points - (current_blue_caps_needed + 1)) * red_points_rate)
+
+    if denominator == 0:
+        return 99999999
+
+    return numerator / denominator
 
 
 func convert_seconds_to_minutes_seconds(seconds: int) -> String:
