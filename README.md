@@ -1,6 +1,6 @@
 # neb-score-calc
 
-A score calculator for Nebulous Fleet Command's control game mode.
+A score calculator for NEBULOUS: Fleet Command's control game mode.
 Currently limited to typical 5 points and no time limit. Caps needed to win assumes all caps are controlled by a team (no neutrals remain).
 
 ## USAGE
@@ -22,7 +22,7 @@ Submit any bugs or feature requests here: [GitHub Issues](https://github.com/mat
 
 ## Credits
 
-- Lys: for developing [Nebulous Fleet Command](https://store.steampowered.com/app/887570/NEBULOUS_Fleet_Command/)
+- Lys: for developing [NEBULOUS: Fleet Command](https://store.steampowered.com/app/887570/NEBULOUS_Fleet_Command/)
 - localmathblob: for initial work on `vic_time.sh` to determine victory time
 - 🦞🦞: for help with time until additional cap needed calculation
 - jraamus: for help with time until additional cap needed calculation
