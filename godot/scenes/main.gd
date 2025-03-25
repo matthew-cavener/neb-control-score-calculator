@@ -85,7 +85,11 @@ func display_victory_conditions(points_to_red_victory: int, points_to_blue_victo
     $VictoryConditionsLabel.text = winning_message + losing_message + additional_cap_message + winning_time_message
 
 func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
-    return (points_to_victory * Constants.SCORE_TIMER_INTERVAL) / (caps * Constants.SCORE_PER_CAP_POINT) if caps > 0 else INF
+    if caps > 0:
+        var raw_time = (points_to_victory * Constants.SCORE_TIMER_INTERVAL) / (caps * Constants.SCORE_PER_CAP_POINT)
+        return ceil(raw_time / Constants.SCORE_TIMER_INTERVAL) * Constants.SCORE_TIMER_INTERVAL
+    else:
+        return INF
 
 func calculate_caps_needed_to_win(red_score: int, blue_score: int, neutral_caps: int) -> Dictionary:
     var total_capture_points = Constants.CAPTURE_POINTS
