@@ -11,14 +11,7 @@ var is_tie: bool = false
 @onready var max_time = Constants.SCORE_TIMER_INTERVAL * score_limit / Constants.SCORE_PER_CAP_POINT
 
 func _ready() -> void:
-
-    reset_scores()
     Events.connect("score_timer_timeout", _on_score_timer_timeout)
-
-
-func reset_scores() -> void:
-    $BlueTeamScore.text = "0"
-    $RedTeamScore.text = "0"
 
 
 func calculate_score() -> void:
