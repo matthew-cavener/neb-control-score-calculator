@@ -11,6 +11,7 @@ var approx_time_to_extra_cap_needed: String = ""
 
 @onready var points_to_red_victory = $ScoreLimit.text
 @onready var points_to_blue_victory = $ScoreLimit.text
+@onready var score_limit = int($ScoreLimit.text)
 
 
 func _ready() -> void:
@@ -20,13 +21,13 @@ func _ready() -> void:
 
 
 func calculate_score() -> void:
-    var score_limit = int($ScoreLimit.text)
     var red_caps = get_tree().get_nodes_in_group("red_point")
     var blue_caps = get_tree().get_nodes_in_group("blue_point")
     var neutral_caps = get_tree().get_nodes_in_group("neutral_point")
     var red_score = int($RedTeamScore.text)
     var blue_score = int($BlueTeamScore.text)
 
+    score_limit = int($ScoreLimit.text)
     red_score += Constants.SCORE_PER_CAP_POINT * red_caps.size()
     blue_score += Constants.SCORE_PER_CAP_POINT * blue_caps.size()
 
@@ -116,31 +117,35 @@ func calculate_time_until_extra_cap_needed(
     current_red_caps_needed: int,
     current_blue_caps_needed: int
     ) -> float:
-    """
-    https://discord.com/channels/1091469366371029025/1091469367323152386/1353191485893246976
-    anyways can't you just solve 3(1000-x-x't)=2(1000-y-y't) for t, where x is the current points of the losing team, x' is the rate of points increase for the losing team, y/y' are the same for the winning team, and t represents time?
-    1000-x-x't calculates the remaining score that team x needs to win at time t, and you need a 4:1 lead to win once the ratio of your remaining score to the enemy's remaining score becomes greater than 3:2
-    you also have to offset t by a minute since capturing an objective is not instantaneous, but im sure you can figure that part out
-    -- Lobster
-    special case for time until losing team needs 4 caps to win
-    (1000 - 4 * red_score + 1 * blue_score) / (4 * red_points_rate - 1 * blue_points_rate)
-    """
-    var total_capture_points = Constants.CAPTURE_POINTS
-    var red_points_rate = Constants.SCORE_PER_CAP_POINT * red_caps / Constants.SCORE_TIMER_INTERVAL
-    var blue_points_rate = Constants.SCORE_PER_CAP_POINT * blue_caps / Constants.SCORE_TIMER_INTERVAL
-    var numerator = 0
-    var denominator = 0
-    if projected_loser == "Red":
-        numerator = (1000 - (current_red_caps_needed + 1) * red_score + (total_capture_points - (current_red_caps_needed + 1)) * blue_score)
-        denominator = ((current_red_caps_needed + 1) * red_points_rate) - ((total_capture_points - (current_red_caps_needed + 1)) * blue_points_rate)
-    else:
-        numerator = (1000 - (current_blue_caps_needed + 1) * blue_score + (total_capture_points - (current_blue_caps_needed + 1)) * red_score)
-        denominator = ((current_blue_caps_needed + 1) * blue_points_rate) - ((total_capture_points - (current_blue_caps_needed + 1)) * red_points_rate)
 
-    if denominator == 0:
-        return 99999999
+    var max_time = Constants.SCORE_TIMER_INTERVAL * score_limit / Constants.SCORE_PER_CAP_POINT
+    var time_elapsed = 0.0
+    var red_current_score = red_score
+    var blue_current_score = blue_score
+    var red_current_caps = red_caps
+    var blue_current_caps = blue_caps
 
-    return numerator / denominator
+    for i in range(int(max_time / Constants.SCORE_TIMER_INTERVAL)):
+        var caps_needed = calculate_caps_needed_to_win(red_current_score, blue_current_score)
+        var red_caps_needed = caps_needed["red_caps_needed"]
+        var blue_caps_needed = caps_needed["blue_caps_needed"]
+
+        if projected_loser == "Red":
+            if red_caps_needed > current_red_caps_needed:
+                return time_elapsed
+            elif red_caps_needed > 5:
+                return -1.0
+        elif projected_loser == "Blue":
+            if blue_caps_needed > current_blue_caps_needed:
+                return time_elapsed
+            elif blue_caps_needed > 5:
+                return -1.0
+
+        time_elapsed += Constants.SCORE_TIMER_INTERVAL
+        red_current_score += red_current_caps * Constants.SCORE_PER_CAP_POINT
+        blue_current_score += blue_current_caps * Constants.SCORE_PER_CAP_POINT
+
+    return -1.0
 
 
 func convert_seconds_to_minutes_seconds(seconds: int) -> String:
