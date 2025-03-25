@@ -80,32 +80,32 @@ func display_victory_conditions(points_to_red_victory: int, points_to_blue_victo
         ]
         return
 
-    var winning_team = "Red" if projected_loser == "Blue" else "Blue"
-    var winning_time = time_to_red_victory if winning_team == "Red" else time_to_blue_victory
-    var winning_caps_needed = red_caps_needed if winning_team == "Red" else blue_caps_needed
+    var projected_winner = "Red" if projected_loser == "Blue" else "Blue"
+    var projected_victory_time = time_to_red_victory if projected_winner == "Red" else time_to_blue_victory
+    var projected_winner_caps_needed = red_caps_needed if projected_winner == "Red" else blue_caps_needed
 
-    var winning_message = "%s team is winning. They need %d caps to win.\n" % [
-        winning_team, winning_caps_needed
+    var winning_message = "%s team is winning. They need %d caps to win\n" % [
+        projected_winner, projected_winner_caps_needed
     ]
 
     var losing_message = ""
     if loser_caps_needed >= Constants.CAPTURE_POINTS:
-        losing_message = "%s team is losing. They need all %d caps to win.\n\n" % [
+        losing_message = "%s team is losing. They need all %d caps to win\n\n" % [
             projected_loser, Constants.CAPTURE_POINTS
         ]
     else:
-        losing_message = "%s team is losing. They need %d caps to win.\n\n" % [
+        losing_message = "%s team is losing. They need %d caps to win\n\n" % [
             projected_loser, loser_caps_needed
         ]
 
     var additional_cap_message = ""
     if approx_time_to_additional_cap_needed != "N/A":
-        additional_cap_message = "%s team will need an additional cap in %s.\nReminder: it takes 60s to capture a point\n\n" % [
-            projected_loser, approx_time_to_additional_cap_needed
+        additional_cap_message = "%s team will need %s caps in %s\nReminder: it takes 60s to capture a point\n\n" % [
+            projected_loser, loser_caps_needed + 1, approx_time_to_additional_cap_needed
         ]
 
-    var winning_time_message = "%s team will win in %s with their current caps.\n" % [
-        winning_team, convert_seconds_to_minutes_seconds(int(winning_time))
+    var winning_time_message = "%s team will win in %s with their current caps\n" % [
+        projected_winner, convert_seconds_to_minutes_seconds(int(projected_victory_time))
     ]
 
     $VictoryConditionsLabel.text = winning_message + losing_message + additional_cap_message + winning_time_message
@@ -136,18 +136,18 @@ func calculate_time_until_additional_cap_needed(
     red_score: int, blue_score: int, red_caps: int, blue_caps: int, neutral_caps: int, current_red_caps_needed: int, current_blue_caps_needed: int
 ) -> float:
     var time_elapsed = 0.0
-    var loser_current_score = red_score if projected_loser == "Red" else blue_score
-    var winner_current_score = blue_score if projected_loser == "Red" else red_score
-    var loser_caps = red_caps if projected_loser == "Red" else blue_caps
-    var winner_caps = blue_caps if projected_loser == "Red" else red_caps
-    var current_loser_caps_needed = current_red_caps_needed if projected_loser == "Red" else current_blue_caps_needed
+    var projected_loser_current_score = red_score if projected_loser == "Red" else blue_score
+    var projected_winner_current_score = blue_score if projected_loser == "Red" else red_score
+    var projected_loser_caps = red_caps if projected_loser == "Red" else blue_caps
+    var projected_winner_caps = blue_caps if projected_loser == "Red" else red_caps
+    var current_projected_loser_caps_needed = current_red_caps_needed if projected_loser == "Red" else current_blue_caps_needed
     while time_elapsed < max_time:
-        var loser_caps_needed = calculate_caps_needed_to_win(loser_current_score, winner_current_score, neutral_caps)
-        if loser_caps_needed > current_loser_caps_needed:
+        var loser_caps_needed = calculate_caps_needed_to_win(projected_loser_current_score, projected_winner_current_score, neutral_caps)
+        if loser_caps_needed > current_projected_loser_caps_needed:
             return time_elapsed
         time_elapsed += Constants.SCORE_TIMER_INTERVAL
-        loser_current_score += loser_caps * Constants.SCORE_PER_CAP_POINT
-        winner_current_score += winner_caps * Constants.SCORE_PER_CAP_POINT
+        projected_loser_current_score += projected_loser_caps * Constants.SCORE_PER_CAP_POINT
+        projected_winner_current_score += projected_winner_caps * Constants.SCORE_PER_CAP_POINT
     return -1.0
 
 
