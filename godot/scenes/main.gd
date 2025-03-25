@@ -50,9 +50,8 @@ func update_victory_conditions(red_score: int, blue_score: int, red_caps: int, b
 
     is_tie = time_to_red_victory == time_to_blue_victory
 
-    var caps_needed = calculate_caps_needed_to_win(red_score, blue_score, neutral_caps)
-    var red_caps_needed = caps_needed["red_caps_needed"]
-    var blue_caps_needed = caps_needed["blue_caps_needed"]
+    var red_caps_needed = calculate_caps_needed_to_win(red_score, blue_score, neutral_caps)
+    var blue_caps_needed = calculate_caps_needed_to_win(blue_score, red_score, neutral_caps)
 
     if not is_tie:
         projected_loser = "Red" if time_to_red_victory > time_to_blue_victory else "Blue"
@@ -120,26 +119,16 @@ func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
         return INF
 
 
-func calculate_caps_needed_to_win(red_score: int, blue_score: int, neutral_caps: int) -> Dictionary:
+func calculate_caps_needed_to_win(team_score: int, opponent_score: int, neutral_caps: int) -> int:
     var total_capture_points = Constants.CAPTURE_POINTS
-    return {
-        "red_caps_needed": calculate_team_caps_needed(red_score, blue_score, total_capture_points, neutral_caps),
-        "blue_caps_needed": calculate_team_caps_needed(blue_score, red_score, total_capture_points, neutral_caps)
-    }
-
-
-func calculate_team_caps_needed(team_score: int, opponent_score: int, total_capture_points: int, neutral_caps: int) -> int:
     var controlled_caps = total_capture_points - neutral_caps
     var remaining_team_score = score_limit - team_score
     var remaining_opponent_score = score_limit - opponent_score
     var total_remaining_score = remaining_team_score + remaining_opponent_score
     var required_score_difference = remaining_team_score * controlled_caps
-
     for caps in range(1, controlled_caps + 1):
-
         if total_remaining_score != 0 and caps > required_score_difference / total_remaining_score:
             return caps
-
     return controlled_caps
 
 
@@ -147,21 +136,18 @@ func calculate_time_until_additional_cap_needed(
     red_score: int, blue_score: int, red_caps: int, blue_caps: int, neutral_caps: int, current_red_caps_needed: int, current_blue_caps_needed: int
 ) -> float:
     var time_elapsed = 0.0
-    var red_current_score = red_score
-    var blue_current_score = blue_score
-
+    var loser_current_score = red_score if projected_loser == "Red" else blue_score
+    var winner_current_score = blue_score if projected_loser == "Red" else red_score
+    var loser_caps = red_caps if projected_loser == "Red" else blue_caps
+    var winner_caps = blue_caps if projected_loser == "Red" else red_caps
+    var current_loser_caps_needed = current_red_caps_needed if projected_loser == "Red" else current_blue_caps_needed
     while time_elapsed < max_time:
-        var caps_needed = calculate_caps_needed_to_win(red_current_score, blue_current_score, neutral_caps)
-
-        if projected_loser == "Red" and caps_needed["red_caps_needed"] > current_red_caps_needed:
+        var loser_caps_needed = calculate_caps_needed_to_win(loser_current_score, winner_current_score, neutral_caps)
+        if loser_caps_needed > current_loser_caps_needed:
             return time_elapsed
-        elif projected_loser == "Blue" and caps_needed["blue_caps_needed"] > current_blue_caps_needed:
-            return time_elapsed
-
         time_elapsed += Constants.SCORE_TIMER_INTERVAL
-        red_current_score += red_caps * Constants.SCORE_PER_CAP_POINT
-        blue_current_score += blue_caps * Constants.SCORE_PER_CAP_POINT
-
+        loser_current_score += loser_caps * Constants.SCORE_PER_CAP_POINT
+        winner_current_score += winner_caps * Constants.SCORE_PER_CAP_POINT
     return -1.0
 
 
