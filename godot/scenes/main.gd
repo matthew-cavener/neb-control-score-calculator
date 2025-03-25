@@ -5,6 +5,7 @@ var loser_caps_needed: int = 0
 var time_to_red_victory: float = INF
 var time_to_blue_victory: float = INF
 var approx_time_to_additional_cap_needed: String = ""
+var is_tie: bool = false
 
 @onready var score_limit = int($ScoreLimit.text)
 @onready var max_time = Constants.SCORE_TIMER_INTERVAL * score_limit / Constants.SCORE_PER_CAP_POINT
@@ -40,25 +41,38 @@ func update_victory_conditions(red_score: int, blue_score: int, red_caps: int, b
     time_to_red_victory = calculate_time_to_win(points_to_red_victory, red_caps)
     time_to_blue_victory = calculate_time_to_win(points_to_blue_victory, blue_caps)
 
+    is_tie = time_to_red_victory == time_to_blue_victory
+
     var caps_needed = calculate_caps_needed_to_win(red_score, blue_score, neutral_caps)
     var red_caps_needed = caps_needed["red_caps_needed"]
     var blue_caps_needed = caps_needed["blue_caps_needed"]
 
-    projected_loser = "Red" if time_to_red_victory > time_to_blue_victory else "Blue"
-    loser_caps_needed = red_caps_needed if projected_loser == "Red" else blue_caps_needed
+    if not is_tie:
+        projected_loser = "Red" if time_to_red_victory > time_to_blue_victory else "Blue"
+        loser_caps_needed = red_caps_needed if projected_loser == "Red" else blue_caps_needed
 
-    if loser_caps_needed >= Constants.CAPTURE_POINTS:
-        approx_time_to_additional_cap_needed = "N/A"
-    else:
-        approx_time_to_additional_cap_needed = convert_seconds_to_minutes_seconds(
-            calculate_time_until_additional_cap_needed(
-                red_score, blue_score, red_caps, blue_caps, neutral_caps, red_caps_needed, blue_caps_needed
+        if loser_caps_needed >= Constants.CAPTURE_POINTS:
+            approx_time_to_additional_cap_needed = "N/A"
+        else:
+            approx_time_to_additional_cap_needed = convert_seconds_to_minutes_seconds(
+                calculate_time_until_additional_cap_needed(
+                    red_score, blue_score, red_caps, blue_caps, neutral_caps, red_caps_needed, blue_caps_needed
+                )
             )
-        )
+    else:
+        projected_loser = ""
+        loser_caps_needed = 0
+        approx_time_to_additional_cap_needed = "N/A"
 
     display_victory_conditions(points_to_red_victory, points_to_blue_victory, red_caps_needed, blue_caps_needed)
 
 func display_victory_conditions(points_to_red_victory: int, points_to_blue_victory: int, red_caps_needed: int, blue_caps_needed: int) -> void:
+    if is_tie:
+        $VictoryConditionsLabel.text = "It's a tie! Both teams will win in %s with their current caps.\n" % [
+            convert_seconds_to_minutes_seconds(int(time_to_red_victory))
+        ]
+        return
+
     var winning_team = "Red" if projected_loser == "Blue" else "Blue"
     var winning_time = time_to_red_victory if winning_team == "Red" else time_to_blue_victory
     var winning_caps_needed = red_caps_needed if winning_team == "Red" else blue_caps_needed
