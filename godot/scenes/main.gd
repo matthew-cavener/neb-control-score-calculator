@@ -129,16 +129,18 @@ func calculate_caps_needed_to_win(red_score: int, blue_score: int, neutral_caps:
 
 
 func calculate_team_caps_needed(team_score: int, opponent_score: int, total_capture_points: int, neutral_caps: int) -> int:
-    var available_caps = total_capture_points - neutral_caps
+    var controlled_caps = total_capture_points - neutral_caps
+    var remaining_team_score = score_limit - team_score
+    var remaining_opponent_score = score_limit - opponent_score
+    var total_remaining_score = remaining_team_score + remaining_opponent_score
+    var required_score_difference = remaining_team_score * controlled_caps
 
-    for caps in range(1, available_caps + 1):
-        var numerator = (score_limit - team_score) * available_caps
-        var denominator = (score_limit - team_score) + (score_limit - opponent_score)
+    for caps in range(1, controlled_caps + 1):
 
-        if caps > numerator / denominator if denominator != 0 else 0:
+        if total_remaining_score != 0 and caps > required_score_difference / total_remaining_score:
             return caps
 
-    return available_caps
+    return controlled_caps
 
 
 func calculate_time_until_additional_cap_needed(
