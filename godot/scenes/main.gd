@@ -25,7 +25,7 @@ func calculate_score() -> void:
     var blue_score = int($BlueTeamScore.text) + blue_caps * Constants.SCORE_PER_CAP_POINT
 
     update_scores(red_score, blue_score)
-    update_victory_conditions(red_score, blue_score, red_caps, blue_caps)
+    update_victory_conditions(red_score, blue_score, red_caps, blue_caps, neutral_caps)
 
 func update_scores(red_score: int, blue_score: int) -> void:
     $RedTeamScore.text = str(red_score)
@@ -33,14 +33,14 @@ func update_scores(red_score: int, blue_score: int) -> void:
     $BlueTeamScore.text = str(blue_score)
     $ProgressBarBlue.texture_bar_fill_fraction = blue_score / float(score_limit)
 
-func update_victory_conditions(red_score: int, blue_score: int, red_caps: int, blue_caps: int) -> void:
+func update_victory_conditions(red_score: int, blue_score: int, red_caps: int, blue_caps: int, neutral_caps: int) -> void:
     var points_to_red_victory = score_limit - red_score
     var points_to_blue_victory = score_limit - blue_score
 
     time_to_red_victory = calculate_time_to_win(points_to_red_victory, red_caps)
     time_to_blue_victory = calculate_time_to_win(points_to_blue_victory, blue_caps)
 
-    var caps_needed = calculate_caps_needed_to_win(red_score, blue_score)
+    var caps_needed = calculate_caps_needed_to_win(red_score, blue_score, neutral_caps)
     var red_caps_needed = caps_needed["red_caps_needed"]
     var blue_caps_needed = caps_needed["blue_caps_needed"]
 
@@ -52,7 +52,7 @@ func update_victory_conditions(red_score: int, blue_score: int, red_caps: int, b
     else:
         approx_time_to_additional_cap_needed = convert_seconds_to_minutes_seconds(
             calculate_time_until_additional_cap_needed(
-                red_score, blue_score, red_caps, blue_caps, red_caps_needed, blue_caps_needed
+                red_score, blue_score, red_caps, blue_caps, neutral_caps, red_caps_needed, blue_caps_needed
             )
         )
 
@@ -78,39 +78,40 @@ func display_victory_conditions(points_to_red_victory: int, points_to_blue_victo
 
     var additional_cap_message = ""
     if approx_time_to_additional_cap_needed != "N/A":
-        additional_cap_message = "The losing team will need an additional cap in %s.\nReminder: it takes 60s to capture a point" % approx_time_to_additional_cap_needed
+        additional_cap_message = "%s team will need an additional cap in %s.\nReminder: it takes 60s to capture a point\n\n" % [projected_loser, approx_time_to_additional_cap_needed]
 
-    var winning_time_message = "The winning team will win in %s with their current caps.\n" % convert_seconds_to_minutes_seconds(int(winning_time))
+    var winning_time_message = "%s team will win in %s with their current caps.\n" % [winning_team, convert_seconds_to_minutes_seconds(int(winning_time))]
 
     $VictoryConditionsLabel.text = winning_message + losing_message + additional_cap_message + winning_time_message
 
 func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
     return (points_to_victory * Constants.SCORE_TIMER_INTERVAL) / (caps * Constants.SCORE_PER_CAP_POINT) if caps > 0 else INF
 
-func calculate_caps_needed_to_win(red_score: int, blue_score: int) -> Dictionary:
+func calculate_caps_needed_to_win(red_score: int, blue_score: int, neutral_caps: int) -> Dictionary:
     var total_capture_points = Constants.CAPTURE_POINTS
     return {
-        "red_caps_needed": calculate_team_caps_needed(red_score, blue_score, total_capture_points),
-        "blue_caps_needed": calculate_team_caps_needed(blue_score, red_score, total_capture_points)
+        "red_caps_needed": calculate_team_caps_needed(red_score, blue_score, total_capture_points, neutral_caps),
+        "blue_caps_needed": calculate_team_caps_needed(blue_score, red_score, total_capture_points, neutral_caps)
     }
 
-func calculate_team_caps_needed(team_score: int, opponent_score: int, total_capture_points: int) -> int:
-    for caps in range(1, total_capture_points + 1):
-        var numerator = (score_limit - team_score) * total_capture_points
+func calculate_team_caps_needed(team_score: int, opponent_score: int, total_capture_points: int, neutral_caps: int) -> int:
+    var available_caps = total_capture_points - neutral_caps
+    for caps in range(1, available_caps + 1):
+        var numerator = (score_limit - team_score) * available_caps
         var denominator = (score_limit - team_score) + (score_limit - opponent_score)
         if caps > numerator / denominator if denominator != 0 else 0:
             return caps
-    return total_capture_points
+    return available_caps
 
 func calculate_time_until_additional_cap_needed(
-    red_score: int, blue_score: int, red_caps: int, blue_caps: int, current_red_caps_needed: int, current_blue_caps_needed: int
+    red_score: int, blue_score: int, red_caps: int, blue_caps: int, neutral_caps: int, current_red_caps_needed: int, current_blue_caps_needed: int
 ) -> float:
     var time_elapsed = 0.0
     var red_current_score = red_score
     var blue_current_score = blue_score
 
     while time_elapsed < max_time:
-        var caps_needed = calculate_caps_needed_to_win(red_current_score, blue_current_score)
+        var caps_needed = calculate_caps_needed_to_win(red_current_score, blue_current_score, neutral_caps)
         if projected_loser == "Red" and caps_needed["red_caps_needed"] > current_red_caps_needed:
             return time_elapsed
         elif projected_loser == "Blue" and caps_needed["blue_caps_needed"] > current_blue_caps_needed:
