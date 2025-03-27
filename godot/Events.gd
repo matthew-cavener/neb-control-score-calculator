@@ -6,3 +6,5 @@ signal manual_score_tick_button_pressed
 signal timer_reset_button_pressed
 signal control_point_pressed(control_point: TextureButton)
 signal score_timer_timeout
+signal add_control_point_button_pressed
+signal remove_control_point_button_pressed

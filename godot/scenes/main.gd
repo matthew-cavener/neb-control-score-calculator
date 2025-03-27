@@ -6,6 +6,7 @@ var time_to_red_victory: float = INF
 var time_to_blue_victory: float = INF
 var approx_time_to_additional_cap_needed: String = ""
 var is_tie: bool = false
+var total_caps: int = 5
 
 @onready var score_limit = int($ScoreLimit.text)
 @onready var max_time = Constants.SCORE_TIMER_INTERVAL * score_limit / Constants.SCORE_PER_CAP_POINT
@@ -25,6 +26,7 @@ func calculate_score() -> void:
     var neutral_caps = get_tree().get_nodes_in_group("neutral_point").size()
     var red_caps = get_tree().get_nodes_in_group("red_point").size()
     var blue_caps = get_tree().get_nodes_in_group("blue_point").size()
+    total_caps = red_caps + blue_caps + neutral_caps
 
     var red_score = int($RedTeamScore.text) + red_caps * Constants.SCORE_PER_CAP_POINT
     var blue_score = int($BlueTeamScore.text) + blue_caps * Constants.SCORE_PER_CAP_POINT
@@ -57,7 +59,7 @@ func update_victory_conditions(red_score: int, blue_score: int, red_caps: int, b
         projected_loser = "Red" if time_to_red_victory > time_to_blue_victory else "Blue"
         loser_caps_needed = red_caps_needed if projected_loser == "Red" else blue_caps_needed
 
-        if loser_caps_needed >= Constants.CAPTURE_POINTS:
+        if loser_caps_needed >= total_caps:
             approx_time_to_additional_cap_needed = "N/A"
         else:
             approx_time_to_additional_cap_needed = convert_seconds_to_minutes_seconds(
@@ -89,9 +91,9 @@ func display_victory_conditions(points_to_red_victory: int, points_to_blue_victo
     ]
 
     var losing_message = ""
-    if loser_caps_needed >= Constants.CAPTURE_POINTS:
+    if loser_caps_needed >= total_caps:
         losing_message = "%s team is losing. They need all %d caps to win\n\n" % [
-            projected_loser, Constants.CAPTURE_POINTS
+            projected_loser, total_caps
         ]
     else:
         losing_message = "%s team is losing. They need %d caps to win\n\n" % [
@@ -120,7 +122,7 @@ func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
 
 
 func calculate_caps_needed_to_win(team_score: int, opponent_score: int, neutral_caps: int) -> int:
-    var total_capture_points = Constants.CAPTURE_POINTS
+    var total_capture_points = total_caps
     var controlled_caps = total_capture_points - neutral_caps
     var remaining_team_score = score_limit - team_score
     var remaining_opponent_score = score_limit - opponent_score
@@ -169,3 +171,10 @@ func _on_manual_score_tick_button_pressed() -> void:
 
 func _on_timer_reset_button_pressed() -> void:
     Events.emit_signal("timer_reset_button_pressed")
+
+
+func _on_add_control_point_button_pressed():
+    Events.emit_signal("add_control_point_button_pressed")
+
+func _on_remove_control_point_button_pressed():
+    Events.emit_signal("remove_control_point_button_pressed")

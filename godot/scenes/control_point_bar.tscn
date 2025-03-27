@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://kxq5qoceby11"]
+[gd_scene load_steps=3 format=3 uid="uid://kxq5qoceby11"]
 
+[ext_resource type="Script" uid="uid://b3s7mmnvj5nqs" path="res://scenes/control_point_bar.gd" id="1_jhhiy"]
 [ext_resource type="PackedScene" uid="uid://df5g5d4v2q0i4" path="res://scenes/control_point.tscn" id="1_mhmbw"]
 
 [node name="ControlPointBar" type="Node2D"]
+script = ExtResource("1_jhhiy")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 10

@@ -131,6 +131,22 @@ offset_bottom = 273.0
 text = "1000"
 placeholder_text = "Point Limit"
 
+[node name="AddControlPointButton" type="Button" parent="." groups=["control_point"]]
+offset_left = 512.0
+offset_top = 256.0
+offset_right = 612.0
+offset_bottom = 306.0
+text = "Add Cap"
+
+[node name="RemoveControlPointButton" type="Button" parent="."]
+offset_left = 512.0
+offset_top = 320.0
+offset_right = 628.0
+offset_bottom = 370.0
+text = "Remove Cap"
+
 [connection signal="pressed" from="SyncTimerTickScoreButton" to="." method="_on_sync_timer_tick_score_button_pressed"]
 [connection signal="pressed" from="ManualScoreTickButton" to="." method="_on_manual_score_tick_button_pressed"]
 [connection signal="pressed" from="TimerResetButton" to="." method="_on_timer_reset_button_pressed"]
+[connection signal="pressed" from="AddControlPointButton" to="." method="_on_add_control_point_button_pressed"]
+[connection signal="pressed" from="RemoveControlPointButton" to="." method="_on_remove_control_point_button_pressed"]
