@@ -14,7 +14,7 @@ offset_bottom = 1080.0
 color = Color(0, 0, 0, 1)
 
 [node name="TimerBar" parent="." instance=ExtResource("2_tefeu")]
-position = Vector2(384, 192)
+position = Vector2(384, 256)
 
 [node name="TimeRemainingLineEdit" type="LineEdit" parent="."]
 visible = false
@@ -28,14 +28,14 @@ alignment = 1
 flat = true
 
 [node name="ControlPointBar" parent="." instance=ExtResource("1_mxuch")]
-position = Vector2(960, 128)
+position = Vector2(960, 192)
 
 [node name="ProgressBarBlue" parent="." instance=ExtResource("2_812s5")]
-position = Vector2(256, 32)
+position = Vector2(256, 96)
 color = 1
 
 [node name="ProgressBarRed" parent="." instance=ExtResource("2_812s5")]
-position = Vector2(1024, 32)
+position = Vector2(1024, 96)
 
 [node name="MadeByLabel" type="Label" parent="."]
 offset_left = 64.0
@@ -50,9 +50,9 @@ vertical_alignment = 1
 
 [node name="VictoryConditionsLabel" type="Label" parent="."]
 offset_left = 704.0
-offset_top = 256.0
+offset_top = 320.0
 offset_right = 1216.0
-offset_bottom = 384.0
+offset_bottom = 448.0
 text = "Welcome to neb score calc!
 
 See the description or readme for usage instructions"
@@ -60,71 +60,71 @@ horizontal_alignment = 1
 
 [node name="BlueTeamScore" type="LineEdit" parent="."]
 offset_left = 128.0
-offset_top = 32.0
+offset_top = 96.0
 offset_right = 256.0
-offset_bottom = 96.0
+offset_bottom = 160.0
 text = "1000"
 alignment = 1
 flat = true
 
 [node name="RedTeamScore" type="LineEdit" parent="."]
 offset_left = 1664.0
-offset_top = 32.0
+offset_top = 96.0
 offset_right = 1792.0
-offset_bottom = 96.0
+offset_bottom = 160.0
 text = "1000"
 alignment = 1
 flat = true
 
 [node name="SyncTimerTickScoreButton" type="Button" parent="."]
 offset_left = 128.0
-offset_top = 192.0
+offset_top = 256.0
 offset_right = 320.0
-offset_bottom = 256.0
+offset_bottom = 320.0
 text = "Sync Timer & Tick Score"
 
 [node name="ManualScoreTickButton" type="Button" parent="."]
 offset_left = 168.0
-offset_top = 288.0
+offset_top = 352.0
 offset_right = 320.0
-offset_bottom = 352.0
+offset_bottom = 416.0
 text = "Manual Score Tick"
 
 [node name="TimerResetButton" type="Button" parent="."]
 offset_left = 192.0
-offset_top = 384.0
+offset_top = 448.0
 offset_right = 320.0
-offset_bottom = 448.0
+offset_bottom = 512.0
 text = "Sync Timer"
 
 [node name="ScoreLimitLabel" type="Label" parent="."]
 offset_left = 912.0
-offset_top = 8.0
+offset_top = 72.0
 offset_right = 1008.0
-offset_bottom = 31.0
+offset_bottom = 95.0
 text = "Score Limit"
 
 [node name="ScoreLimit" type="LineEdit" parent="."]
 offset_left = 896.0
-offset_top = 32.0
+offset_top = 96.0
 offset_right = 1024.0
-offset_bottom = 96.0
+offset_bottom = 160.0
 text = "1000"
 placeholder_text = "Point Limit"
 alignment = 1
 
 [node name="AddControlPointButton" type="Button" parent="." groups=["control_point"]]
 offset_left = 1280.0
-offset_top = 192.0
+offset_top = 256.0
 offset_right = 1408.0
-offset_bottom = 256.0
+offset_bottom = 320.0
 text = "Add Cap"
 
 [node name="RemoveControlPointButton" type="Button" parent="."]
 offset_left = 512.0
-offset_top = 192.0
+offset_top = 256.0
 offset_right = 640.0
-offset_bottom = 256.0
+offset_bottom = 320.0
 text = "Remove Cap"
 
 [connection signal="pressed" from="SyncTimerTickScoreButton" to="." method="_on_sync_timer_tick_score_button_pressed"]
