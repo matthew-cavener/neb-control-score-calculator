@@ -24,5 +24,5 @@ Submit any bugs or feature requests here: [GitHub Issues](https://github.com/mat
 
 - Lys: for developing [NEBULOUS: Fleet Command](https://store.steampowered.com/app/887570/NEBULOUS_Fleet_Command/)
 - localmathblob: for initial work on `vic_time.sh` to determine victory time
-- 🦞🦞: for help with time until additional cap needed calculation
-- jraamus: for help with time until additional cap needed calculation
+- 🦞🦞: for help with [time until additional cap needed](https://discord.com/channels/1091469366371029025/1091469367323152386/1353191485893246976) calculation
+- jraamus: for help with [caps needed](https://discord.com/channels/1091469366371029025/1091469367323152386/1353181341570830337) and [time until additional cap needed](https://discord.com/channels/1091469366371029025/1091469367323152386/1353200096350699602) calculations
