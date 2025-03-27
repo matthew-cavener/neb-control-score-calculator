@@ -8,8 +8,9 @@ var approx_time_to_additional_cap_needed: String = ""
 var is_tie: bool = false
 var total_caps: int = 5
 
-@onready var score_limit = int($ScoreLimit.text)
-@onready var max_time = Constants.SCORE_TIMER_INTERVAL * score_limit / Constants.SCORE_PER_CAP_POINT
+@onready var score_limit: int = int($ScoreLimit.text)
+@onready var max_time: float = (Constants.SCORE_TIMER_INTERVAL * score_limit / Constants.SCORE_PER_CAP_POINT)
+# @onready var max_time = 9999999999
 
 func _ready() -> void:
 
@@ -72,14 +73,20 @@ func update_victory_conditions(red_score: int, blue_score: int, red_caps: int, b
         loser_caps_needed = 0
         approx_time_to_additional_cap_needed = "N/A"
 
-    display_victory_conditions(points_to_red_victory, points_to_blue_victory, red_caps_needed, blue_caps_needed)
+    display_victory_conditions(red_caps, blue_caps, red_caps_needed, blue_caps_needed)
 
 
-func display_victory_conditions(points_to_red_victory: int, points_to_blue_victory: int, red_caps_needed: int, blue_caps_needed: int) -> void:
+func display_victory_conditions(red_caps: int, blue_caps:int, red_caps_needed: int, blue_caps_needed: int) -> void:
+    if red_caps == 0 and blue_caps == 0:
+        $VictoryConditionsLabel.text = "Neither team bring a cap fleet?\n"
+        return
+
     if is_tie:
-        $VictoryConditionsLabel.text = "It's a tie! Both teams will win in %s with their current caps.\n" % [
+        $VictoryConditionsLabel.text = "It's a tie! (maybe? known bug)\nBoth teams will win in %s with their current caps.\n" % [
             convert_seconds_to_minutes_seconds(int(time_to_red_victory))
         ]
+        $VictoryConditionsLabel.text += "Red team needs %d caps to win.\n" % [red_caps_needed + 1]
+        $VictoryConditionsLabel.text += "Blue team needs %d caps to win.\n" % [blue_caps_needed + 1]
         return
 
     var projected_winner = "Red" if projected_loser == "Blue" else "Blue"
@@ -115,23 +122,19 @@ func display_victory_conditions(points_to_red_victory: int, points_to_blue_victo
 
 func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
     if caps > 0:
-        var raw_time = (points_to_victory * Constants.SCORE_TIMER_INTERVAL) / (caps * Constants.SCORE_PER_CAP_POINT)
+        var raw_time = ((points_to_victory) * Constants.SCORE_TIMER_INTERVAL) / (caps * Constants.SCORE_PER_CAP_POINT)
         return ceil(raw_time / Constants.SCORE_TIMER_INTERVAL) * Constants.SCORE_TIMER_INTERVAL
     else:
         return INF
 
 
 func calculate_caps_needed_to_win(team_score: int, opponent_score: int, neutral_caps: int) -> int:
-    var total_capture_points = total_caps
-    var controlled_caps = total_capture_points - neutral_caps
+    var controlled_caps = total_caps - neutral_caps
     var remaining_team_score = score_limit - team_score
     var remaining_opponent_score = score_limit - opponent_score
     var total_remaining_score = remaining_team_score + remaining_opponent_score
-    var required_score_difference = remaining_team_score * controlled_caps
-    for caps in range(1, controlled_caps + 1):
-        if total_remaining_score != 0 and caps > required_score_difference / total_remaining_score:
-            return caps
-    return controlled_caps
+    var required_caps = ceil(float(remaining_team_score * controlled_caps) / total_remaining_score)
+    return min(required_caps, controlled_caps)
 
 
 func calculate_time_until_additional_cap_needed(
@@ -144,8 +147,8 @@ func calculate_time_until_additional_cap_needed(
     var projected_winner_caps = blue_caps if projected_loser == "Red" else red_caps
     var current_projected_loser_caps_needed = current_red_caps_needed if projected_loser == "Red" else current_blue_caps_needed
     while time_elapsed < max_time:
-        var loser_caps_needed = calculate_caps_needed_to_win(projected_loser_current_score, projected_winner_current_score, neutral_caps)
-        if loser_caps_needed > current_projected_loser_caps_needed:
+        var ticked_loser_caps_needed = calculate_caps_needed_to_win(projected_loser_current_score, projected_winner_current_score, neutral_caps)
+        if ticked_loser_caps_needed > current_projected_loser_caps_needed:
             return time_elapsed
         time_elapsed += Constants.SCORE_TIMER_INTERVAL
         projected_loser_current_score += projected_loser_caps * Constants.SCORE_PER_CAP_POINT
@@ -175,6 +178,7 @@ func _on_timer_reset_button_pressed() -> void:
 
 func _on_add_control_point_button_pressed():
     Events.emit_signal("add_control_point_button_pressed")
+
 
 func _on_remove_control_point_button_pressed():
     Events.emit_signal("remove_control_point_button_pressed")
