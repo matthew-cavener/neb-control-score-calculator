@@ -95,9 +95,9 @@ offset_left = 128.0
 offset_top = 384.0
 offset_right = 256.0
 offset_bottom = 448.0
-text = "Reset Timer"
+text = "Sync Timer"
 
-[node name="TimerResetTickScoreLabel" type="Label" parent="."]
+[node name="ScoreLimitLabel" type="Label" parent="."]
 offset_left = 912.0
 offset_top = 8.0
 offset_right = 1008.0

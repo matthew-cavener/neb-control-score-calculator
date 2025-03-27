@@ -8,8 +8,9 @@ var approx_time_to_additional_cap_needed: String = ""
 var is_tie: bool = false
 var total_caps: int = 5
 
-@onready var score_limit = int($ScoreLimit.text)
-@onready var max_time = Constants.SCORE_TIMER_INTERVAL * score_limit / Constants.SCORE_PER_CAP_POINT
+@onready var score_limit: int = int($ScoreLimit.text)
+@onready var max_time: float = (Constants.SCORE_TIMER_INTERVAL * score_limit / Constants.SCORE_PER_CAP_POINT)
+# @onready var max_time = 9999999999
 
 func _ready() -> void:
 
@@ -81,7 +82,7 @@ func display_victory_conditions(red_caps: int, blue_caps:int, red_caps_needed: i
         return
 
     if is_tie:
-        $VictoryConditionsLabel.text = "It's a tie! Both teams will win in %s with their current caps.\n" % [
+        $VictoryConditionsLabel.text = "It's a tie! (maybe? known bug)\nBoth teams will win in %s with their current caps.\n" % [
             convert_seconds_to_minutes_seconds(int(time_to_red_victory))
         ]
         $VictoryConditionsLabel.text += "Red team needs %d caps to win.\n" % [red_caps_needed + 1]
@@ -121,7 +122,7 @@ func display_victory_conditions(red_caps: int, blue_caps:int, red_caps_needed: i
 
 func calculate_time_to_win(points_to_victory: int, caps: int) -> float:
     if caps > 0:
-        var raw_time = (points_to_victory * Constants.SCORE_TIMER_INTERVAL) / (caps * Constants.SCORE_PER_CAP_POINT)
+        var raw_time = ((points_to_victory) * Constants.SCORE_TIMER_INTERVAL) / (caps * Constants.SCORE_PER_CAP_POINT)
         return ceil(raw_time / Constants.SCORE_TIMER_INTERVAL) * Constants.SCORE_TIMER_INTERVAL
     else:
         return INF
@@ -177,6 +178,7 @@ func _on_timer_reset_button_pressed() -> void:
 
 func _on_add_control_point_button_pressed():
     Events.emit_signal("add_control_point_button_pressed")
+
 
 func _on_remove_control_point_button_pressed():
     Events.emit_signal("remove_control_point_button_pressed")
