@@ -38,10 +38,10 @@ color = 1
 position = Vector2(1024, 32)
 
 [node name="MadeByLabel" type="Label" parent="."]
-offset_left = 1548.0
-offset_top = 997.0
-offset_right = 1912.0
-offset_bottom = 1072.0
+offset_left = 64.0
+offset_top = 944.0
+offset_right = 448.0
+offset_bottom = 1024.0
 text = "Oh No! I'm A Bean!'s
 Neb Score Calculator
 Thanks to localmathblob, Lobster, and Jraamus"
