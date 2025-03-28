@@ -82,7 +82,7 @@ func display_victory_conditions(red_caps: int, blue_caps:int, red_caps_needed: i
         return
 
     if is_tie:
-        $VictoryConditionsLabel.text = "It's a tie! (maybe? known bug)\nBoth teams will win in %s with their current caps.\n" % [
+        $VictoryConditionsLabel.text = "It's a tie!\nBoth teams will win in %s with their current caps.\n" % [
             convert_seconds_to_minutes_seconds(int(time_to_red_victory))
         ]
         $VictoryConditionsLabel.text += "Red team needs %d caps to win.\n" % [red_caps_needed + 1]
@@ -108,7 +108,12 @@ func display_victory_conditions(red_caps: int, blue_caps:int, red_caps_needed: i
         ]
 
     var additional_cap_message = ""
-    if approx_time_to_additional_cap_needed != "N/A":
+    if approx_time_to_additional_cap_needed == "00:-1":
+        additional_cap_message = "%s team needs to take all non-neutral caps to win\n" % [
+            projected_loser
+        ]
+
+    elif approx_time_to_additional_cap_needed != "N/A":
         additional_cap_message = "%s team will need %s caps in %s\nReminder: it takes 60s to capture a point\n\n" % [
             projected_loser, loser_caps_needed + 1, approx_time_to_additional_cap_needed
         ]
