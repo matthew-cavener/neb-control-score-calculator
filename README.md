@@ -1,7 +1,6 @@
 # neb-score-calc
 
 A score calculator for NEBULOUS: Fleet Command's control game mode.
-Currently limited to typical 5 points and no time limit. Caps needed to win assumes all caps are controlled by a team (no neutrals remain).
 
 ## USAGE
 
@@ -9,12 +8,12 @@ Currently limited to typical 5 points and no time limit. Caps needed to win assu
 - Use the timer sync button to sync the clock to the match.
 - Make any necessary adjustments to the score.
 - The score will be updated as you make changes.
+- Recommended to set cap ownership before setting team point totals
 
 ## KNOWN ISSUES
 
-- Does not account for neutral control points.
-- Limited to 5 control points, no time limit.
-- Time before next cap needed only works for case of 3 to 4 points needed
+- Tie is sometimes predicted when one team is ahead by 2 points and teams have equal caps
+- When running in a browser window, the tab may be suspended by the browser, causing the timer to fall behind. Run native windows or linux version to resolve.
 
 ## Bugs and feature requests
 
